@@ -1,13 +1,24 @@
-AutoflowDiffableView = require './autoflow-diffable-view'
-
 module.exports =
-  autoflowDiffableView: null
-
   activate: (state) ->
-    @autoflowDiffableView = new AutoflowDiffableView(state.autoflowDiffableViewState)
+    atom.workspaceView.eachEditorView (editorView) =>
+      if editorView.attached and editorView.getPane()?
+        editorView.command 'autoflow-diffable:reflow-selection', =>
+          @reflowSelection(editorView.editor)
 
-  deactivate: ->
-    @autoflowDiffableView.destroy()
+  reflowSelection: (editor) ->
+    range = editor.getSelectedBufferRange()
+    range = editor.getCurrentParagraphBufferRange() if range.isEmpty()
 
-  serialize: ->
-    autoflowDiffableViewState: @autoflowDiffableView.serialize()
+    if range?
+      editor.getBuffer().change(range, @reflow(editor.getTextInRange(range)))
+
+  reflow: (text) ->
+    paragraphBlocks = text.split /\n\s*\n/g
+
+    newBlocks = for block in paragraphBlocks
+      sentences = block.match /[^.!\?]+[.!\?]+/g
+      newSentences = for s in sentences
+        s.replace('\n', ' ').replace(/[ ]+/, ' ').trim()
+      newSentences.join '\n'
+
+    newBlocks.join '\n\n'

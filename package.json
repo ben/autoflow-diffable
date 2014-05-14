@@ -1,0 +1,14 @@
+{
+  "name": "autoflow-diffable",
+  "main": "./lib/autoflow-diffable",
+  "version": "0.0.0",
+  "description": "A short description of your package",
+  "activationEvents": ["autoflow-diffable:toggle"],
+  "repository": "https://github.com/atom/autoflow-diffable",
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "dependencies": {
+  }
+}

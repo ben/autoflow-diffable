@@ -16,7 +16,7 @@ module.exports =
     paragraphBlocks = text.split /\n\s*\n/g
 
     newBlocks = for block in paragraphBlocks
-      sentences = block.match /[^.!\?]+[.!\?]+/g
+      sentences = block.match(/[^.!\?]+[.!\?]*/g) || []
       newSentences = for s in sentences
         s.replace('\n', ' ').replace(/[ ]+/, ' ').trim()
       newSentences.join '\n'

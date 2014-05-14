@@ -8,10 +8,14 @@ AutoflowDiffable = require '../lib/autoflow-diffable'
 describe "AutoflowDiffable", ->
   describe "reflowing paragraphs", ->
     it "reflows sentences", ->
-      lipsum = "Abc def. Ghi? Jkl mno pqr!"
+      lipsum = "Abc def. Ghi? Jkl mno pqr! stu"
       expected = """
 Abc def.
 Ghi?
 Jkl mno pqr!
+stu
       """.trim()
       expect(AutoflowDiffable.reflow lipsum).toEqual(expected)
+
+    it "works when text isn't really punctuated", ->
+      expect(AutoflowDiffable.reflow "== A chapter").toEqual "== A chapter"

@@ -5,20 +5,23 @@ AutoflowDiffable = require '../lib/autoflow-diffable'
 # To run a specific `it` or `describe` block add an `f` to the front (e.g. `fit`
 # or `fdescribe`). Remove the `f` to unfocus the block.
 
+# Helper
+shouldMatch = (input, expected) ->
+  expect(AutoflowDiffable.reflow input.trim()).toEqual expected.trim()
+
 describe "AutoflowDiffable", ->
   describe "reflowing paragraphs", ->
     it "reflows sentences", ->
-      lipsum = "Abc def. Ghi? Jkl mno pqr! stu"
-      expected = """
+      shouldMatch "Abc def. Ghi? Jkl mno pqr! stu",
+        """
 Abc def.
 Ghi?
 Jkl mno pqr!
 stu
-      """.trim()
-      expect(AutoflowDiffable.reflow lipsum).toEqual(expected)
+        """
 
     it "works when text isn't really punctuated", ->
-      expect(AutoflowDiffable.reflow "== A chapter").toEqual "== A chapter"
+      shouldMatch "== A chapter", "== A chapter"
 
     it "doesn't reflow single blocks that shouldn't be reflowed", ->
       unwrappableText = """
@@ -31,14 +34,14 @@ image::images/foobar.png[The alt-text for this image.]
 $ echo "Shell blocks. They shouldn't be rewrapped."
 
   indented code blocks. they shouldn't be rewrapped either. foobar.
-""".trim()
-      expect(AutoflowDiffable.reflow unwrappableText).toEqual(unwrappableText)
+"""
+      shouldMatch unwrappableText, unwrappableText
 
     it "handles punctuation", ->
-      expect(AutoflowDiffable.reflow("""
+      shouldMatch """
 This is a sentence. "This is also a sentence." 'So is this.'
-      """.trim())).toEqual """
+      """, """
 This is a sentence.
 "This is also a sentence."
 'So is this.'
-      """.trim()
+      """

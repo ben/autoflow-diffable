@@ -16,9 +16,14 @@ module.exports =
     paragraphBlocks = text.split /\n\s*\n/g
 
     newBlocks = for block in paragraphBlocks
-      sentences = block.match(/[^.!\?]+[.!\?]*/g) || []
-      newSentences = for s in sentences
-        s.replace('\n', ' ').replace(/[ ]+/, ' ').trim()
-      newSentences.join '\n'
+      # Skip blocks that signal that should stay the way they are.
+      leaveMeAlone = /^((```)|(  )|([.!\?])|(\[\[))|([=-])/
+      if leaveMeAlone.test(block)
+        block
+      else
+        sentences = block.match(/[^.!\?]+[.!\?"']*/g) || []
+        newSentences = for s in sentences
+          s.replace('\n', ' ').replace(/[ ]+/, ' ').trim()
+        newSentences.join '\n'
 
     newBlocks.join '\n\n'

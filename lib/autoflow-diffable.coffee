@@ -19,7 +19,7 @@ module.exports =
     newBlocks = for block in paragraphBlocks
       extendedBlockStart = /^(```|--)/
       extendedBlockEnd = /[\s\S](```|--)$/
-      leaveMeAlone = /^(  |\t|\.|\[\[|[=-])/
+      leaveMeAlone = /^(  |\t|\.|\[\[|[=-]|image::)/
 
       # Skip multi-block verbatim sections
       if extendedBlockStart.test block

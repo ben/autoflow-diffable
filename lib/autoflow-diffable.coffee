@@ -14,16 +14,26 @@ module.exports =
 
   reflow: (text) ->
     paragraphBlocks = text.split /\n\s*\n/g
+    keepSkipping = false
 
     newBlocks = for block in paragraphBlocks
-      # Skip blocks that signal that should stay the way they are.
-      leaveMeAlone = /^((```)|(  )|([.!\?])|(\[\[))|([=-])/
-      if leaveMeAlone.test(block)
-        block
+      extendedBlockStart = /^(```|--)/
+      extendedBlockEnd = /[\s\S](```|--)$/
+      leaveMeAlone = /^(  |\t|\.|\[\[|[=-])/
+
+      # Skip multi-block verbatim sections
+      if extendedBlockStart.test block
+        keepSkipping = true
+
+      theBlock = block
+      unless keepSkipping or leaveMeAlone.test(block)
+        theBlock = block.replace(/([\.!\?]["')]*)( +|$)/g, '$1\n').trim()
       else
-        sentences = block.match(/[^.!\?]+[.!\?"']*/g) || []
-        newSentences = for s in sentences
-          s.replace('\n', ' ').replace(/[ ]+/, ' ').trim()
-        newSentences.join '\n'
+        console.log "Skipping #{keepSkipping}, test #{leaveMeAlone.test block} for block:\n#{block}"
+
+      if keepSkipping and extendedBlockEnd.test block.trim() # TODO: trim end only
+        keepSkipping = false
+
+      theBlock
 
     newBlocks.join '\n\n'

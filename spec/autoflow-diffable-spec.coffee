@@ -7,6 +7,7 @@ AutoflowDiffable = require '../lib/autoflow-diffable'
 
 # Helper
 shouldMatch = (input, expected) ->
+  expected ||= input
   expect(AutoflowDiffable.reflow input.trim()).toEqual expected.trim()
 
 describe "AutoflowDiffable", ->
@@ -21,21 +22,31 @@ stu
         """
 
     it "works when text isn't really punctuated", ->
-      shouldMatch "== A chapter", "== A chapter"
+      shouldMatch "== A chapter"
 
     it "doesn't reflow single blocks that shouldn't be reflowed", ->
-      unwrappableText = """
-== A Chapter ==
+      shouldMatch """
+== A Chapter Title. Deal With It. ==
 
 .An Asciidoc thingy
 image::images/foobar.png[The alt-text for this image.]
 
 --[source,shell]
-$ echo "Shell blocks. They shouldn't be rewrapped."
+----
+Shell blocks. They shouldn't be rewrapped.
+----
 
   indented code blocks. they shouldn't be rewrapped either. foobar.
 """
-      shouldMatch unwrappableText, unwrappableText
+
+    it "handles multi-block parts of a document", ->
+      shouldMatch """
+```
+This shouldn't wrap. At all.
+
+Not this either. Not one bit.
+```
+      """
 
     it "handles punctuation", ->
       shouldMatch """
@@ -44,4 +55,37 @@ This is a sentence. "This is also a sentence." 'So is this.'
 This is a sentence.
 "This is also a sentence."
 'So is this.'
+      """
+
+    it "doesn't rewrite urls", ->
+      shouldMatch "kernel.org is a website."
+
+    it "rewraps and indents lists", ->
+      shouldMatch """
+* Abc. Def. Ghi.
+* Jkl. Mno.
+      """, """
+* Abc.
+  Def.
+  Ghi.
+* Jkl.
+  Mno.
+      """
+
+    it "leaves trailing parentheses and quotes", ->
+      shouldMatch """
+"A sentence." And not a sentence.
+
+(A parenthetical.) And not a parenthetical.
+
+("Both in one.") Hopefully.
+      """, """
+"A sentence."
+And not a sentence.
+
+(A parenthetical.)
+And not a parenthetical.
+
+("Both in one.")
+Hopefully.
       """

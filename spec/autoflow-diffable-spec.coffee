@@ -62,14 +62,21 @@ This is a sentence.
 
     it "rewraps and indents lists", ->
       shouldMatch """
-* Abc. Def. Ghi.
+* Abc. Def.
 * Jkl. Mno.
+
+- Adam. Bravo.
+- Charlie. Dog.
       """, """
 * Abc.
   Def.
-  Ghi.
 * Jkl.
   Mno.
+
+- Adam.
+  Bravo.
+- Charlie.
+  Dog.
       """
 
     it "leaves trailing parentheses and quotes", ->

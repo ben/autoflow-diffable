@@ -19,7 +19,7 @@ module.exports =
     newBlocks = for block in paragraphBlocks
       extendedBlockStart = /^(```|--)/
       extendedBlockEnd = /[\s\S](```|--)$/
-      leaveMeAlone = /^(  |\t|\.|\[\[|[=-]|image::)/
+      leaveMeAlone = /^(  |\t|\.|\[\[|[=]|image::)/
 
       # Skip multi-block verbatim sections
       if extendedBlockStart.test block
@@ -27,9 +27,8 @@ module.exports =
 
       theBlock = block
       unless keepSkipping or leaveMeAlone.test(block)
-        theBlock = block.replace(/([\.!\?]["')]*)( +|$)/g, '$1\n').trim()
-      else
-        console.log "Skipping #{keepSkipping}, test #{leaveMeAlone.test block} for block:\n#{block}"
+        prefix = if /^[-\d*]/.test(block) then '  ' else ''
+        theBlock = block.replace(/([\.!\?]["')]*)( +|$)/g, "$1\n#{prefix}").trim()
 
       if keepSkipping and extendedBlockEnd.test block.trim() # TODO: trim end only
         keepSkipping = false

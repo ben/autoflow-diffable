@@ -1,7 +1,7 @@
 {
   "name": "autoflow-diffable",
   "main": "./lib/autoflow-diffable",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Formats prose with one line per sentence.",
   "activationEvents": {
     "autoflow-diffable:reflow-selection": ".editor"
@@ -9,7 +9,7 @@
   "repository": "https://github.com/ben/autoflow-diffable",
   "license": "MIT",
   "engines": {
-    "atom": ">0.50.0"
+    "atom": ">1.0.0"
   },
   "dependencies": {}
 }

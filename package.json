@@ -1,7 +1,7 @@
 {
   "name": "autoflow-diffable",
   "main": "./lib/autoflow-diffable",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Formats prose with one line per sentence.",
   "activationEvents": {
     "autoflow-diffable:reflow-selection": ".editor"
